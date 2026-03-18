@@ -1,0 +1,37 @@
+.login {
+    width: 450px;
+}
+
+.sidebar {
+    ul{
+        li{
+            border-bottom: 1px solid rgba(6, 17, 35, 0.2);
+            margin-bottom: 2px;
+            a{
+                display: block;
+                padding: 10px;
+                color: #061123;
+                text-decoration: none;
+                &:hover{
+                    color:aqua;
+                }
+            }
+        }
+    }
+}
+
+ul {
+  list-style: none;   
+  padding: 0;   
+  margin: 0;  
+}
+
+.card-footer a {
+  text-decoration: none;
+  color: inherit; 
+}
+
+.card-footer a:hover {
+  text-decoration: none; 
+  color: inherit;   
+}
