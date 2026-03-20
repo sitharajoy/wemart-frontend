@@ -37,7 +37,7 @@ const Edit = () => {
 
     const editCategory = async (data) => {
         setDisable(true);
-         const res = await fetch(`${apiUrl}/categories/${params.id}`, {
+         const res = await fetch(`${apiUrl}/categories/${params}`, {
                 method: 'PUT',
                 headers: {
                     'Content-type' : 'application/json',
