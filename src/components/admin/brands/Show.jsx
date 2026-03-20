@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Sidebar from '../Sidebar'
 import { adminToken, apiUrl } from '../../common/http'
+import Loader from '../../common/Loader'
+import NoState from '../../common/NoState'
+import { toast } from 'react-toastify'
 
 const Show = () => {
-    const [categories, setCategories] = useState([]);
+    const [brands, setbrands] = useState([]);
+    const [loader, setLoader] = useState(false);
 
     const fetchBrands = async () => {
+        setLoader(true);
         const res = await fetch(`${apiUrl}/brands`, {
             method: "GET",
             headers: {
@@ -17,12 +22,42 @@ const Show = () => {
         }).then(res => res.json())
         .then(result => {
             if(result.status == 200) {
-                setCategories(result.data);
+                setLoader(false);
+                console.log(result.data);
+                setbrands(result.data);
             } else {
                 console.log('Something went wrong');
             }
         })
     }
+
+     const deleteBrand = async (id) => {
+    
+            if(confirm("Are you sure you want to delete?")) {
+                    const res = await fetch(`${apiUrl}/brands/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-type' : 'application/json',
+                            'Accept' : 'application/json',
+                            'authorization' : `Bearer ${adminToken()}`
+                        }
+                    }).then(res => res.json())
+                    .then(result => {
+                    if(result.status == 200) {
+                          const newBrands = brands.filter(brand => brand.id != id);
+                          setbrands(newBrands);
+                          toast.success(result.message);
+                    } else {
+                        console.log('something went wrong');
+                    }
+                })
+            }
+                   
+        }
+
+    useEffect(() => {
+        fetchBrands()
+    },[])
 
   return (
     <div className='container'>
@@ -37,7 +72,9 @@ const Show = () => {
          <div className='col-md-9'>
          <div className='card shadow'>
             <div className='card-body p-4'>
-
+                {loader && <Loader/>}
+                 {loader == false && brands.length == 0 && <NoState text="Brands Not Found"/>}
+                 {brands.length > 0 && 
                 <table className='table table-hover'>
                     <thead>
                         <tr>
@@ -48,19 +85,19 @@ const Show = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {categories.map(category => {
+                        {brands.map(brand => {
                             return (
                                  <tr>
-                                    <td>{category.id}</td>
-                                    <td>{category.name}</td>
-                                    <td>{category.status == 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}</td>
-                                    <td><Link className='text-primary'>
+                                    <td>{brand.id}</td>
+                                    <td>{brand.name}</td>
+                                    <td>{brand.status == 1 ? <span className='badge text-bg-success'>Active</span> : <span className='badge text-bg-danger'>Inactive</span>}</td>
+                                    <td><Link to={`/admin/brands/edit/${brand.id}`} className='text-primary'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                             viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10L3 14l.146-2.854 10-10zM11.207 2L4 9.207V12h2.793L14 4.793 11.207 2z" />
                                         </svg>
                                         </Link>
 
-                                        <Link className='text-danger ms-2'>
+                                        <Link onClick={() => deleteBrand(brand.id)} className='text-danger ms-2'>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm4 0A.5.5 0 0 1 10 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5z" />
                                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1 0-2H5l1-1h4l1 1h2.5a1 1 0 0 1 1 1zM4 4v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4H4z" />
@@ -74,6 +111,8 @@ const Show = () => {
                        
                     </tbody>
                 </table>
+                }
+                
             </div>
 
          </div>

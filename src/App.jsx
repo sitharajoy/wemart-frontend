@@ -18,7 +18,11 @@ import { default as ShowCategories } from './components/admin/category/Show'
 import { default as CreateCategories } from './components/admin/category/Create'
 import { default as EditCategories } from './components/admin/category/Edit'
 import { default as ShowBrands } from './components/admin/brands/Show'
-import { default as CreateBrands } from './components/admin/category/Create'
+import { default as CreateBrands } from './components/admin/brands/Create'
+import { default as EditBrands } from './components/admin/brands/Edit'
+import { default as ShowProducts } from './components/admin/product/Show'
+import { default as CreateProducts } from './components/admin/product/Create'
+import { default as EditProducts } from './components/admin/product/Edit'
 
 
 const App = () => {
@@ -37,17 +41,9 @@ const App = () => {
             <Route path="/shop-single" element={<ShopSingle/>}></Route>
 
             <Route path="/admin/login" element={<Login/>}></Route>
-            <Route path="/admin/dashboard" element={
-              <AdminRequireAuth>
-                <Dashboard />
-              </AdminRequireAuth>
-            }></Route>
+            <Route path="/admin/dashboard" element={<AdminRequireAuth><Dashboard /></AdminRequireAuth>}></Route>
 
-            <Route path="/admin/categories" element={
-              <AdminRequireAuth>
-                <ShowCategories/>
-              </AdminRequireAuth>
-            }></Route>
+            <Route path="/admin/categories" element={<AdminRequireAuth><ShowCategories/></AdminRequireAuth>}></Route>
 
              <Route path="/admin/categories/create" element={
               <AdminRequireAuth>
@@ -72,6 +68,22 @@ const App = () => {
                 <CreateBrands/>
               </AdminRequireAuth>
             }></Route>
+
+            <Route path="/admin/brands/edit/:id" element={
+              <AdminRequireAuth>
+                <EditBrands/>
+              </AdminRequireAuth>
+            }></Route>
+
+            <Route path="/admin/products" element={
+              <AdminRequireAuth>
+                <ShowProducts/>
+              </AdminRequireAuth>
+            }></Route>
+
+            <Route path="/admin/products/create" element={<AdminRequireAuth><CreateProducts/> </AdminRequireAuth>}></Route>
+
+            <Route path="/admin/products/edit/:id" element={<AdminRequireAuth><EditProducts/> </AdminRequireAuth> }></Route>
 
           </Routes>
         <Footer />
